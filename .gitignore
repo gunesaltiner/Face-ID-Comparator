@@ -1,0 +1,13 @@
+# Ignore JSON files
+*.json
+
+# Ignore image files (PNG, JPG, JPEG)
+*.png
+*.jpg
+*.jpeg
+
+# Ignore Python cache directories and compiled files
+__pycache__/
+*.pyc
+
+*.pth

@@ -16,16 +16,14 @@ def main():
                         help="Directory where aligned face images will be saved.")
     args = parser.parse_args()
 
-    # Create the processed folder if it doesn't exist
     os.makedirs(args.processed_dir, exist_ok=True)
 
     # Load the detection results
     with open(args.detection_json, "r") as f:
         detection_results = json.load(f)
 
-    alignment_results = {}  # This will store updated info for each image
+    alignment_results = {}  # store updated info for each image
 
-    # Process all images in the input directory
     image_patterns = [os.path.join(args.input_dir, "*.jpg"), os.path.join(args.input_dir, "*.png")]
     image_files = []
     for pattern in image_patterns:
@@ -56,12 +54,10 @@ def main():
                 print(f"Error aligning face {i} in {image_name}: {e}")
                 continue
 
-            # Define a new filename for the aligned image in the processed directory
             aligned_filename = f"{os.path.splitext(image_name)[0]}_aligned_{i}.jpg"
             aligned_path = os.path.join(args.processed_dir, aligned_filename)
             cv2.imwrite(aligned_path, aligned_face)
 
-            # Update the face dictionary with transformation info
             face["transform"] = {
                 "affine_matrix": affine_matrix,
                 "aligned_image_path": aligned_path

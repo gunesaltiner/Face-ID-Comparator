@@ -61,7 +61,6 @@ def main():
             "aligned_image_path": output_image_path
         }
 
-    # Save updated metadata
     with open(args.metadata_path, "w") as f:
         json.dump(metadata, f, indent=2)
 

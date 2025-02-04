@@ -1,10 +1,9 @@
-# compare-faces.py (updated to include distilled embeddings)
 import argparse
 import json
 import os
 import numpy as np
 from src.utils.mse_utils import compute_mse
-from src.embeddings.embedding_utils import PretrainedEmbeddingExtractor  # Your teacher extractor
+from src.embeddings.embedding_utils import PretrainedEmbeddingExtractor 
 from src.embeddings.distilled_embedding_utils import DistilledEmbeddingExtractor
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
@@ -22,25 +21,24 @@ def main():
     parser.add_argument("--output", default="comparison_results.json", help="Output JSON file for results")
     args = parser.parse_args()
 
-    # Compute MSE (optionally scaled for readability)
+    # Compute MSE ( scaled for readability)
     mse_score = compute_mse(args.image1, args.image2)
     scaled_mse = mse_score * 1e7
 
-    # Teacher embedding extraction using your existing PretrainedEmbeddingExtractor.
+    # Teacher embedding extraction using existing PretrainedEmbeddingExtractor.
     teacher_extractor = PretrainedEmbeddingExtractor()
     teacher_emb1 = np.array(teacher_extractor.extract_arcface_embedding(args.image1))
     teacher_emb2 = np.array(teacher_extractor.extract_arcface_embedding(args.image2))
     teacher_cosine = cosine_similarity(teacher_emb1, teacher_emb2)
     teacher_euclidean = euclidean_distance(teacher_emb1, teacher_emb2)
 
-    # Distilled embedding extraction using the new extractor.
+    # Distilled embedding extraction.
     distilled_extractor = DistilledEmbeddingExtractor()
     distilled_emb1 = distilled_extractor.extract_embedding(args.image1)
     distilled_emb2 = distilled_extractor.extract_embedding(args.image2)
     distilled_cosine = cosine_similarity(distilled_emb1, distilled_emb2)
     distilled_euclidean = euclidean_distance(distilled_emb1, distilled_emb2)
 
-    # Prepare the output dictionary.
     results = {
         "MSE": round(scaled_mse, 4),
         "teacher_embedding": {
@@ -53,7 +51,6 @@ def main():
         }
     }
 
-    # Save the results to a JSON file.
     with open(args.output, "w") as f:
         json.dump(results, f, indent=2)
     

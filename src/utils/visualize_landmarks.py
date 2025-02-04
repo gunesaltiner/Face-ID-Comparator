@@ -2,10 +2,9 @@ import cv2
 import json
 import numpy as np
 
-# Load image and JSON
-image_path = "aa.jpg"
-json_path = "aa.json"
-output_path = "aa_landmarks2.jpg"  # Output image with landmarks
+image_path = "deneme.jpg"
+json_path = "deneme.json"
+output_path = "deneme_landmarks.jpg"
 
 image = cv2.imread(image_path)
 if image is None:
@@ -29,11 +28,9 @@ for face in data["faces"]:
         cv2.circle(image, (lx, ly), 3, (0, 0, 255), -1)  # Red dot
         cv2.putText(image, key, (lx + 5, ly - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)  # Blue text
 
-# Save the output image
 cv2.imwrite(output_path, image)
 print(f"Landmark visualization saved as {output_path}")
 
-# Display the image (optional)
 cv2.imshow("Face Landmarks", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

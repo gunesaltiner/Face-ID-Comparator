@@ -11,16 +11,13 @@ class FaceDetector:
         self.model.prepare(ctx_id=-1)
     
     def detect_faces(self, image_path: str) -> List[Dict]:
-        # Read image
         img = cv2.imread(image_path)
 
         if img is None:
             raise ValueError(f"Failed to load image: {image_path}")
         
-        # Detect faces and landmarks
         faces = self.model.get(img=img)
 
-        # Result
         results = []
         for face in faces:
             x, y, w, h = convert_to_float(face.bbox)

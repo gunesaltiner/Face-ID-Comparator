@@ -99,7 +99,7 @@ Comparison results saved to comparison_results.json
 To cluster all aligned face images (e.g., in the `data/processed/` folder), run:
 
 ```bash
-python scripts/cluster-faces.py data/processed/ --output_json identities.json --output_png clustering_matrix.png --eps 0.5 --min_samples 2 --img_size 100
+python scripts/cluster-faces.py processed/ --output_json identities.json --output_png clustering_matrix.png --eps 0.5 --min_samples 2 --img_size 100
 ```
 
 This command:

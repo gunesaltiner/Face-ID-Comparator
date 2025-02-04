@@ -1,9 +1,8 @@
-# distilled_embedding_utils.py
 import cv2
 import torch
 import numpy as np
 from torchvision import transforms
-from src.training.student_model import StudentModel  # Ensure this file is accessible
+from src.training.student_model import StudentModel
 
 class DistilledEmbeddingExtractor:
     def __init__(self, model_path="models/distilled_model.pth", device=None):
@@ -13,6 +12,7 @@ class DistilledEmbeddingExtractor:
         self.model.load_state_dict(torch.load(model_path, map_location=self.device))
         self.model.to(self.device)
         self.model.eval()
+
         # Define the transforms identical to those used during training.
         self.transform = transforms.Compose([
             transforms.ToPILImage(),
@@ -23,19 +23,18 @@ class DistilledEmbeddingExtractor:
         ])
         
     def extract_embedding(self, aligned_face_path: str) -> np.ndarray:
-        # Load image using OpenCV.
         image = cv2.imread(aligned_face_path)
         if image is None:
             raise ValueError(f"Failed to load image: {aligned_face_path}")
-        # Convert from BGR to RGB.
+
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        # Apply the transform.
+
         image_tensor = self.transform(image)
-        # Add a batch dimension.
+
         image_tensor = image_tensor.unsqueeze(0).to(self.device)
-        # Inference: compute the embedding.
+
         with torch.no_grad():
             embedding = self.model(image_tensor)
-        # Convert embedding to a NumPy array.
+
         embedding = embedding.cpu().numpy().flatten()
         return embedding

@@ -24,10 +24,9 @@ def train_student_model(student, dataloader, criterion, optimizer, device):
     return running_loss / len(dataloader.dataset)
 
 def main():
-    # Use GPU if available
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    # Define the transforms for the images.
     # MobileNetV2 expects images resized to 224x224 with a specific normalization.
     transform = transforms.Compose([
         transforms.ToPILImage(),
@@ -37,26 +36,22 @@ def main():
                              std=[0.229, 0.224, 0.225])
     ])
     
-    # Path to the folder with aligned face images.
     image_dir = "processed"
     
-    # Create dataset and dataloader.
     dataset = DistilledFaceDataset(image_dir=image_dir, transform=transform)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4)
     
     # Initialize the student model.
     student = StudentModel().to(device)
     
-    # Define loss function and optimizer.
     criterion = nn.MSELoss()  # Minimize the difference between teacher and student embeddings.
     optimizer = optim.Adam(student.parameters(), lr=1e-4)
     
-    num_epochs = 10  # Adjust based on your dataset and convergence behavior.
+    num_epochs = 10
     for epoch in range(num_epochs):
         epoch_loss = train_student_model(student, dataloader, criterion, optimizer, device)
         print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.4f}")
     
-    # Save the distilled (student) model.
     model_path = "distilled_model.pth"
     torch.save(student.state_dict(), model_path)
     print(f"Saved distilled model to {model_path}")

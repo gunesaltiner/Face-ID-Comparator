@@ -21,7 +21,7 @@ def compute_mse(image_path1: str, image_path2: str) -> float:
     rows, cols, _ = image1.shape
     sigma = min(rows, cols) / 4  # Adjust sigma to control weighting
     mask = _create_gaussian_mask(rows, cols, sigma)
-    squared_diff *= mask[:, :, np.newaxis]  # Apply to all channels
+    squared_diff *= mask[:, :, np.newaxis]
 
     return float(np.mean(squared_diff))
 

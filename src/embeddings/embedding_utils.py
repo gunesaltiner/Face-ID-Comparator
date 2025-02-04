@@ -13,7 +13,6 @@ class PretrainedEmbeddingExtractor:
             if image is None:
                 raise ValueError(f"Failed to load image: {aligned_face_path}")
 
-            # Extract Embeeddings
             embedding = DeepFace.represent(
                 img_path=image,
                 model_name=self.deepface_model,
